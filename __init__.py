@@ -8,9 +8,11 @@ if "bpy" in locals():
     import importlib
     importlib.reload(mirror_gizmo_ops)
     importlib.reload(mirror_gizmo_panel)
+    importlib.reload(mirror_gizmo_gizmo)
 else:
     from . import mirror_gizmo_ops
     from . import mirror_gizmo_panel
+    from . import mirror_gizmo_gizmo
 
 
 bl_info = {
@@ -29,9 +31,11 @@ bl_info = {
 def register():
     mirror_gizmo_ops.register()
     mirror_gizmo_panel.register()
+    mirror_gizmo_gizmo.register()
 
 
 def unregister():
+    mirror_gizmo_gizmo.unregister()
     mirror_gizmo_panel.unregister()
     mirror_gizmo_ops.unregister()
 

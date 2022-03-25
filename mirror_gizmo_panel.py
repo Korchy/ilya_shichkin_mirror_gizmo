@@ -18,7 +18,7 @@ class MIRROR_GIZMO_PT_panel(Panel):
     def draw(self, context):
         layout = self.layout
         layout.operator(
-            operator='mirror_gizmo.mirror',
+            operator='mirror_gizmo.mirror_gizmo',
             icon='BLENDER',
             text='Mirror Gizmo'
         )
