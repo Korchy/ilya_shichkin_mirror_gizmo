@@ -73,8 +73,6 @@ class MIRROR_GIZMO_OT_mirror(Operator):
     )
 
     def execute(self, context):
-        print(self.angle, self.axis)
-
         bpy.ops.object.mode_set(mode='OBJECT')
         # empty to control mirror angle
         empty = context.blend_data.objects.new(
@@ -116,10 +114,8 @@ class MIRROR_GIZMO_OT_mirror(Operator):
         bpy.ops.object.modifier_apply(
             modifier=mirror_modifier.name
         )
-
-        # context.blend_data.objects.remove(empty, do_unlink=True)
-        bpy.ops.object.mode_set(mode='EDIT')
         bpy.data.objects.remove(empty, do_unlink=True)
+        bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
     @classmethod
