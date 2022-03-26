@@ -25,6 +25,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'Z'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,
@@ -48,6 +49,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'NEG_Z'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,
@@ -71,6 +73,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'X'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,
@@ -94,6 +97,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'NEG_X'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,
@@ -117,6 +121,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'Y'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,
@@ -140,6 +145,7 @@ class MIRROR_GIZMO_GT_mirror(GizmoGroup):
             operator='mirror_gizmo.mirror'
         )
         op.axis = 'NEG_Y'
+        op.angle = 0
         # location
         m = Matrix.LocRotScale(
             context.scene.cursor.location,

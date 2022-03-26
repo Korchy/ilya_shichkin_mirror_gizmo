@@ -51,9 +51,8 @@ class MIRROR_GIZMO_OT_mirror(Operator):
 
     angle: IntProperty(
         name='Angle',
-        default=45,
-        subtype='UNSIGNED',
-        min=0,
+        default=0,
+        min=-360,
         max=360
     )
 
@@ -73,49 +72,64 @@ class MIRROR_GIZMO_OT_mirror(Operator):
     )
 
     def execute(self, context):
-        bpy.ops.object.mode_set(mode='OBJECT')
-        # empty to control mirror angle
-        empty = context.blend_data.objects.new(
-            name='mirror_empty',
-            object_data=None
-        )
-        empty.empty_display_type = 'ARROWS'
-        empty.location = context.scene.cursor.location
-        context.scene.collection.objects.link(empty)
-        rotation = Euler((
-            radians(-self.angle if 'NEG' in self.axis else self.angle) if 'X' in self.axis else 0.0,
-            radians(-self.angle if 'NEG' in self.axis else self.angle) if 'Y' in self.axis else 0.0,
-            radians(-self.angle if 'NEG' in self.axis else self.angle) if 'Z' in self.axis else 0.0
-        ), 'XYZ')
-        empty.rotation_euler = rotation
-        # mirror modifier
-        mirror_modifier = context.object.modifiers.new(
-            name="mirror",
-            type='MIRROR'
-        )
-        mirror_modifier.mirror_object = empty
-        mirror_modifier.merge_threshold = 0.0005
-        mirror_modifier.use_axis = (
-            True if 'X' in self.axis else False,
-            True if 'Z' in self.axis else False,
-            True if 'Y' in self.axis else False
-        )
-        mirror_modifier.use_bisect_axis = (
-            True if 'X' in self.axis else False,
-            True if 'Z' in self.axis else False,
-            True if 'Y' in self.axis else False
-        )
-        mirror_modifier.use_bisect_flip_axis = (
-            False if 'X_NEG' in self.axis else True,
-            False if 'Z_NEG' in self.axis else True,
-            False if 'Y_NEG' in self.axis else True
-        )
-        # apply and clear
-        bpy.ops.object.modifier_apply(
-            modifier=mirror_modifier.name
-        )
-        bpy.data.objects.remove(empty, do_unlink=True)
-        bpy.ops.object.mode_set(mode='EDIT')
+        # print(self.axis, self.angle)
+        src_object = context.active_object
+        if src_object.data.total_vert_sel > 0:
+            current_objects = set(context.blend_data.objects)
+            bpy.ops.mesh.separate(type='SELECTED')
+            separated_object = next(iter(set(context.blend_data.objects) - current_objects), None)
+            bpy.ops.object.mode_set(mode='OBJECT')
+            # empty to control mirror angle
+            empty = context.blend_data.objects.new(
+                name='mirror_empty',
+                object_data=None
+            )
+            empty.empty_display_type = 'ARROWS'
+            empty.location = context.scene.cursor.location
+            context.scene.collection.objects.link(empty)
+            rotation = Euler((
+                radians(-self.angle if 'NEG' in self.axis else self.angle) if 'Y' in self.axis else 0.0,
+                radians(-self.angle if 'NEG' in self.axis else self.angle) if 'Z' in self.axis else 0.0,
+                radians(-self.angle if 'NEG' in self.axis else self.angle) if 'X' in self.axis else 0.0
+            ), 'XYZ')
+            empty.rotation_euler = rotation
+            # mirror modifier
+
+            context.view_layer.objects.active = separated_object    # modifier to separated object
+
+            mirror_modifier = context.object.modifiers.new(
+                name="mirror",
+                type='MIRROR'
+            )
+            mirror_modifier.mirror_object = empty
+            mirror_modifier.merge_threshold = 0.0005
+            mirror_modifier.use_axis = (
+                True if 'X' in self.axis else False,
+                True if 'Y' in self.axis else False,
+                True if 'Z' in self.axis else False
+            )
+            mirror_modifier.use_bisect_axis = (
+                True if 'X' in self.axis else False,
+                True if 'Y' in self.axis else False,
+                True if 'Z' in self.axis else False
+            )
+            mirror_modifier.use_bisect_flip_axis = (
+                True if 'X' in self.axis and 'NEG' in self.axis else False,
+                True if 'Y' in self.axis and 'NEG' in self.axis else False,
+                True if 'Z' in self.axis and 'NEG' in self.axis else False
+            )
+            # apply and clear
+            bpy.ops.object.modifier_apply(
+                modifier=mirror_modifier.name
+            )
+
+            src_object.select_set(True)
+            separated_object.select_set(True)
+            context.view_layer.objects.active = src_object
+            bpy.ops.object.join()
+            bpy.data.objects.remove(empty, do_unlink=True)
+
+            bpy.ops.object.mode_set(mode='EDIT')
         return {'FINISHED'}
 
     @classmethod

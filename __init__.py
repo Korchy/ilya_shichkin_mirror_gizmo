@@ -19,7 +19,7 @@ bl_info = {
     'name': 'Mirror Ggizmo',
     'category': 'All',
     'author': 'Nikita Akimov',
-    'version': (1, 0, 0),
+    'version': (1, 0, 3),
     'blender': (3, 1, 0),
     'location': '3D Viewport - Edit mode',
     'doc_url': 'https://github.com/Korchy/ilya_shichkin_mirror_gizmo',
