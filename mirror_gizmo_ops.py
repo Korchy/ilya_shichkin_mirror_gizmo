@@ -74,7 +74,7 @@ class MIRROR_GIZMO_OT_mirror(Operator):
     def execute(self, context):
         # print(self.axis, self.angle)
         src_object = context.active_object
-        if src_object.data.total_vert_sel > 0:
+        if src_object.data.total_vert_sel > 0 and not src_object.data.shape_keys:
             current_objects = set(context.blend_data.objects)
             bpy.ops.mesh.separate(type='SELECTED')
             separated_object = next(iter(set(context.blend_data.objects) - current_objects), None)
